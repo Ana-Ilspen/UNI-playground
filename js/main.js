@@ -16,9 +16,7 @@ import { EffectComposer } from 'https://unpkg.com/three@0.160.0/examples/jsm/pos
 import { RenderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/ShaderPass.js';
 
-// composer setup
-const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(scene, camera));
+
 
 const lensPass = new ShaderPass(blackHoleShader);
 composer.addPass(lensPass);
@@ -80,4 +78,5 @@ window.addEventListener('resize',()=>{
   renderer.setSize(window.innerWidth,window.innerHeight);
   composer.setSize(window.innerWidth,window.innerHeight);
 });
+
 
