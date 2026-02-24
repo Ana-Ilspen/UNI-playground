@@ -1,6 +1,5 @@
-export function hyperspace(ship)
-{
+import { camera } from './renderer.js';
 
-ship.velocity.multiplyScalar(5)
-
+export function warp(){
+  camera.position.set(Math.random()*2000, Math.random()*1000, Math.random()*2000);
 }
