@@ -1,139 +1,94 @@
-import * as THREE from "/lib/three.module.js"
+import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
 
-import {scene,renderer}
-from "../renderer.js"
+/* ---------- BASIC SETUP ---------- */
 
-import {input}
-from "../input.js"
+const scene = new THREE.Scene();
 
-import {updateCamera}
-from "../control.js"
+const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000000000
+);
 
-import {applyGravity}
-from "../grav.js"
+camera.position.set(0, 50, 200);
 
-import {applyDrag}
-from "../atmo.js"
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 
-import {Planet}
-from "../planet.js"
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-import {Ship}
-from "../spacecraft.js"
-
-import {BlackHole}
-from "../blackhole.js"
-
-import {builder}
-from "../builder.js"
-
-import "../info.js"
-
-import {hud}
-from "../hud.js"
-
-import {
-createGalaxy
-}
-from "../gb.js"
-
-import {
-createGrid,
-warpGrid
-}
-from "../grid.js"
-
-import {
-stickToPlanet
-}
-from "../sg.js"
+document.body.appendChild(renderer.domElement);
 
 
-createGalaxy()
+/* ---------- LIGHT ---------- */
 
-const grid=createGrid()
+const light = new THREE.PointLight(0xffffff, 2);
 
-const planets=[]
+light.position.set(0, 0, 0);
 
-const ship=new Ship()
-
-const blackHole =
-new BlackHole(
-new THREE.Vector3(200,0,0),
-500000,
-10
-)
-
-builder((mass,radius)=>{
-
-const p=new Planet({
-
-mass,
-
-radius,
-
-position:
-new THREE.Vector3(
-Math.random()*200-100,
-0,
-Math.random()*200-100
-),
-
-velocity:new THREE.Vector3()
-
-})
-
-planets.push(p)
-
-})
+scene.add(light);
 
 
-function loop()
-{
+/* ---------- STAR ---------- */
 
-requestAnimationFrame(loop)
+const starGeo = new THREE.SphereGeometry(20, 64, 64);
 
-const bodies =
-[ship,blackHole,...planets]
+const starMat = new THREE.MeshStandardMaterial({
+    color: 0xffffaa,
+    emissive: 0xffffaa,
+    emissiveIntensity: 2
+});
 
-applyGravity(bodies,.016)
+const star = new THREE.Mesh(starGeo, starMat);
 
-ship.update(input,.016)
+scene.add(star);
 
-blackHole.update()
 
-for(const p of planets)
-{
+/* ---------- PLANET ---------- */
 
-applyDrag(ship,p)
+const planetGeo = new THREE.SphereGeometry(5, 64, 64);
 
-stickToPlanet(ship,p)
+const planetMat = new THREE.MeshStandardMaterial({
+    color: 0x3399ff
+});
 
-p.update(.016)
+const planet = new THREE.Mesh(planetGeo, planetMat);
 
+planet.position.x = 100;
+
+scene.add(planet);
+
+
+/* ---------- ORBIT VARIABLES ---------- */
+
+let angle = 0;
+
+
+/* ---------- LOOP ---------- */
+
+function loop() {
+
+    requestAnimationFrame(loop);
+
+    angle += 0.01;
+
+    planet.position.x = Math.cos(angle) * 100;
+    planet.position.z = Math.sin(angle) * 100;
+
+    renderer.render(scene, camera);
 }
 
-warpGrid(grid,bodies)
-
-/* UPDATE CAMERA FIRST */
-updateCamera(ship.position)
-
-/* THEN RENDER WITH CAMERA */
-renderer.render(scene, camera)
-
-hud(ship)
-
-}
-
-loop()
+loop();
 
 
+/* ---------- RESIZE ---------- */
 
+window.addEventListener("resize", () => {
 
+    camera.aspect = window.innerWidth / window.innerHeight;
 
+    camera.updateProjectionMatrix();
 
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-
-
-
-
+});
