@@ -1,4 +1,4 @@
-import * as THREE from "./lib/three.module.js"
+import * as THREE from "/lib/three.module.js"
 import {scene} from "./renderer.js"
 
 export function createGrid()
@@ -63,5 +63,6 @@ pos.setY(i,y)
 }
 
 pos.needsUpdate=true
+
 
 }
