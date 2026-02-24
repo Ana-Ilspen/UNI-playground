@@ -1,4 +1,4 @@
-import * as THREE from "./lib/three.module.js"
+import * as THREE from "/lib/three.module.js"
 
 export function terrain(radius)
 {
@@ -29,5 +29,6 @@ pos.setXYZ(i,v.x,v.y,v.z)
 geo.computeVertexNormals()
 
 return geo
+
 
 }
