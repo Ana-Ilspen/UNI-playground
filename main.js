@@ -1,4 +1,3 @@
-console.log("SIM STARTED")
 import * as THREE from "/lib/three.module.js"
 
 import {scene,renderer}
@@ -127,6 +126,7 @@ hud(ship)
 }
 
 loop()
+
 
 
 
