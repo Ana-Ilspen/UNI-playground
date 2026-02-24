@@ -1,57 +1,23 @@
-import * as THREE from "/lib/three.module.js"
-import {scene} from "../renderer.js"
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+import { bodies, scene } from './constants.js';
 
-export class BlackHole
-{
-
-constructor(position,mass,radius)
-{
-
-this.mass=mass
-this.radius=radius
-
-this.position=position
-this.velocity=new THREE.Vector3()
-
-this.mesh =
-new THREE.Mesh(
-
-new THREE.SphereGeometry(radius,64,64),
-
-new THREE.MeshBasicMaterial({
-color:0x000000
-})
-
-)
-
-scene.add(this.mesh)
-
-const glow =
-new THREE.Mesh(
-
-new THREE.SphereGeometry(radius*1.5,64,64),
-
-new THREE.MeshBasicMaterial({
-color:0x4400ff,
-transparent:true,
-opacity:.3
-})
-
-)
-
-scene.add(glow)
-
-this.glow=glow
-
+export function createBlackHole(pos){
+  const radius=10;
+  const mesh=new THREE.Mesh(
+    new THREE.SphereGeometry(radius,32,32),
+    new THREE.MeshBasicMaterial({color:0x000000})
+  );
+  mesh.position.copy(pos);
+  scene.add(mesh);
+  const disk=new THREE.Mesh(
+    new THREE.TorusGeometry(radius*2,3,16,100),
+    new THREE.MeshBasicMaterial({color:0xffaa00})
+  );
+  disk.rotation.x=Math.PI/2;
+  mesh.add(disk);
+  bodies.push({mesh,mass:100000,velocity:new THREE.Vector3(),type:'blackhole'});
 }
 
-update()
-{
-
-this.mesh.position.copy(this.position)
-this.glow.position.copy(this.position)
-
-}
-
-
+export function createBlackHoleUI(){
+  createBlackHole(new THREE.Vector3(Math.random()*400-200,0,Math.random()*400-200));
 }
