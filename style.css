@@ -3,45 +3,59 @@
   position: absolute;
   top: 15px;
   left: 15px;
-  width: 250px;
-  background: rgba(10,10,10,0.9); /* blackish */
+  width: 260px;
+  background: rgba(20,20,30,0.95); /* deep dark background */
   color: #fff;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
   font-size: 14px;
-  padding: 15px;
-  border-radius: 12px;
+  padding: 20px;
+  border-radius: 16px;
   line-height: 1.6em;
-  box-shadow: 0 0 15px rgba(0,0,0,0.7);
+  box-shadow: 0 0 20px rgba(0,0,0,0.7);
+  backdrop-filter: blur(5px);
 }
 
-#ui input {
+#ui h2 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  text-align: center;
+  color: #00ffff;
+}
+
+#ui input, #ui select {
   width: 100%;
-  margin-bottom: 8px;
-  border-radius: 6px;
+  margin-bottom: 10px;
+  border-radius: 8px;
   border: none;
-  padding: 6px;
+  padding: 8px;
   background: #222;
   color: #fff;
 }
 
-#ui input:focus {
+#ui input:focus, #ui select:focus {
   outline: none;
   border: 1px solid #1e90ff;
 }
 
 #ui button {
   width: 100%;
-  margin-bottom: 8px;
-  padding: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   background: linear-gradient(90deg,#1e90ff,#63b3ff);
-  color: white;
+  color: #fff;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s all;
+  transition: all 0.2s ease-in-out;
 }
 
 #ui button:hover {
   background: linear-gradient(90deg,#63b3ff,#1e90ff);
+  transform: scale(1.05);
+}
+
+#ui p {
+  margin: 6px 0;
 }
