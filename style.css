@@ -1,39 +1,47 @@
 /* ui.css */
 #ui {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 220px;
-  background: rgba(0,0,0,0.7);
+  top: 15px;
+  left: 15px;
+  width: 250px;
+  background: rgba(10,10,10,0.9); /* blackish */
   color: #fff;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   font-size: 14px;
-  padding: 12px;
-  border-radius: 8px;
-  line-height: 1.5em;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  padding: 15px;
+  border-radius: 12px;
+  line-height: 1.6em;
+  box-shadow: 0 0 15px rgba(0,0,0,0.7);
 }
 
 #ui input {
   width: 100%;
-  margin-bottom: 6px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  padding: 4px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border: none;
+  padding: 6px;
+  background: #222;
+  color: #fff;
+}
+
+#ui input:focus {
+  outline: none;
+  border: 1px solid #1e90ff;
 }
 
 #ui button {
   width: 100%;
-  margin-bottom: 6px;
-  padding: 6px;
+  margin-bottom: 8px;
+  padding: 8px;
   border: none;
-  border-radius: 4px;
-  background: #1e90ff;
+  border-radius: 8px;
+  background: linear-gradient(90deg,#1e90ff,#63b3ff);
   color: white;
-  cursor: pointer;
   font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s all;
 }
 
 #ui button:hover {
-  background: #63b3ff;
+  background: linear-gradient(90deg,#63b3ff,#1e90ff);
 }
