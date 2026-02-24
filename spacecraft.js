@@ -1,4 +1,4 @@
-import * as THREE from "./lib/three.module.js"
+import * as THREE from "/lib/three.module.js"
 import {scene,camera} from "./renderer.js"
 
 export class Ship
@@ -67,5 +67,6 @@ new THREE.Vector3(0,10,25)
 camera.lookAt(this.position)
 
 }
+
 
 }
