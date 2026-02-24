@@ -1,4 +1,4 @@
-import * as THREE from "./lib/three.module.js"
+import * as THREE from "/lib/three.module.js"
 import {scene} from "./renderer.js"
 import {terrain} from "./terrain.js"
 
@@ -41,5 +41,6 @@ this.velocity.clone().multiplyScalar(dt)
 this.mesh.position.copy(this.position)
 
 }
+
 
 }
