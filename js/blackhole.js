@@ -1,23 +1,28 @@
 import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-import { bodies, scene } from './constants.js';
 
-export function createBlackHole(pos){
-  const radius=10;
-  const mesh=new THREE.Mesh(
-    new THREE.SphereGeometry(radius,32,32),
-    new THREE.MeshBasicMaterial({color:0x000000})
-  );
-  mesh.position.copy(pos);
-  scene.add(mesh);
-  const disk=new THREE.Mesh(
-    new THREE.TorusGeometry(radius*2,3,16,100),
-    new THREE.MeshBasicMaterial({color:0xffaa00})
-  );
-  disk.rotation.x=Math.PI/2;
-  mesh.add(disk);
-  bodies.push({mesh,mass:100000,velocity:new THREE.Vector3(),type:'blackhole'});
-}
+export const blackHoleShader = {
+  uniforms: {
+    tDiffuse: { value: null },
+    blackHolePos: { value: new THREE.Vector3(0,0,0) },
+    strength: { value: 0.25 }
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    void main(){
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform float strength;
+    varying vec2 vUv;
 
-export function createBlackHoleUI(){
-  createBlackHole(new THREE.Vector3(Math.random()*400-200,0,Math.random()*400-200));
-}
+    void main() {
+      vec2 uv = vUv - vec2(0.5);
+      float r = length(uv);
+      uv -= uv * strength / (r*r + 0.001);
+      gl_FragColor = texture2D(tDiffuse, uv + vec2(0.5));
+    }
+  `
+};
