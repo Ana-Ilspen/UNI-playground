@@ -1,4 +1,4 @@
-import * as THREE from "./lib/three.module.js"
+import * as THREE from "/lib/three.module.js"
 import {G,timeScale} from "./constants.js"
 
 export function applyGravity(bodies,dt)
@@ -33,5 +33,6 @@ acc.multiplyScalar(dt*timeScale)
 }
 
 }
+
 
 }
