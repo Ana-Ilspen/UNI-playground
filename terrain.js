@@ -1,34 +1,13 @@
-import * as THREE from "/lib/three.module.js"
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
-export function terrain(radius)
-{
-
-const geo =
-new THREE.SphereGeometry(radius,64,64)
-
-const pos = geo.attributes.position
-
-for(let i=0;i<pos.count;i++)
-{
-
-const v =
-new THREE.Vector3()
-.fromBufferAttribute(pos,i)
-
-const h =
-Math.sin(v.x*.3)+
-Math.sin(v.y*.3)+
-Math.sin(v.z*.3)
-
-v.multiplyScalar(1+h*.02)
-
-pos.setXYZ(i,v.x,v.y,v.z)
-
-}
-
-geo.computeVertexNormals()
-
-return geo
-
-
+export function applyTerrain(geometry, rough){
+  if(rough<=0) return;
+  const posAttr = geometry.attributes.position;
+  for(let i=0;i<posAttr.count;i++){
+    const v = new THREE.Vector3().fromBufferAttribute(posAttr,i);
+    const h=(Math.sin(v.x*rough)+Math.sin(v.y*rough)+Math.sin(v.z*rough))*0.3;
+    v.normalize().multiplyScalar(v.length()+h*rough);
+    posAttr.setXYZ(i,v.x,v.y,v.z);
+  }
+  geometry.computeVertexNormals();
 }
