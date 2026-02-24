@@ -1,4 +1,4 @@
-import * as THREE from "./lib/three.module.js"
+import * as THREE from "/lib/three.module.js"
 
 export const scene = new THREE.Scene()
 
@@ -30,4 +30,5 @@ scene.add(light)
 
 scene.add(
 new THREE.AmbientLight(0xffffff,.3)
+
 )
