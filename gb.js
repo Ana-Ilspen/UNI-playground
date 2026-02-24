@@ -1,4 +1,4 @@
-import * as THREE from "./lib/three.module.js"
+import * as THREE from "/lib/three.module.js"
 import {scene} from "./renderer.js"
 
 export function createGalaxy()
@@ -35,5 +35,6 @@ const stars =
 new THREE.Points(geo,mat)
 
 scene.add(stars)
+
 
 }
