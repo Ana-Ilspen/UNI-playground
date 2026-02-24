@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Universe Builder</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="ui.css">
+</head>
+<body>
+  <!-- Top search / library panel -->
+  <div id="library">
+    <input id="search" placeholder="Search celestial bodies...">
+    <button id="addPlanet">Add Planet</button>
+    <button id="addStar">Add Star</button>
+    <button id="addBlackHole">Add Black Hole</button>
+    <button id="addAntimatter">Add Antimatter</button>
+  </div>
+
+  <!-- Bottom info placards -->
+  <div id="infoPanel"></div>
+
+  <!-- Three.js canvas injected by builder.js -->
+  <script type="module" src="./js/builder.js"></script>
+</body>
+</html>
