@@ -1,5 +1,5 @@
 console.log("SIM STARTED")
-import * as THREE from "../lib/three.module.js"
+import * as THREE from "/lib/three.module.js"
 
 import {scene,renderer}
 from "../renderer.js"
@@ -126,6 +126,7 @@ updateCamera)
 }
 
 loop()
+
 
 
 
