@@ -1,4 +1,4 @@
-import * as THREE from "../lib/three.module.js"
+import * as THREE from "/lib/three.module.js"
 import {scene} from "../renderer.js"
 
 export class BlackHole
@@ -52,5 +52,6 @@ this.mesh.position.copy(this.position)
 this.glow.position.copy(this.position)
 
 }
+
 
 }
