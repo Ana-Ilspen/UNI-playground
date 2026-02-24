@@ -94,7 +94,7 @@ function loop()
 
 requestAnimationFrame(loop)
 
-const bodies=
+const bodies =
 [ship,blackHole,...planets]
 
 applyGravity(bodies,.016)
@@ -116,16 +116,18 @@ p.update(.016)
 
 warpGrid(grid,bodies)
 
+/* UPDATE CAMERA FIRST */
 updateCamera(ship.position)
 
-hud(ship)
+/* THEN RENDER WITH CAMERA */
+renderer.render(scene, camera)
 
-renderer.render(scene,
-updateCamera)
+hud(ship)
 
 }
 
 loop()
+
 
 
 
