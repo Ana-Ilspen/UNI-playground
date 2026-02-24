@@ -1,40 +1,12 @@
-import * as THREE from "/lib/three.module.js"
-import {scene} from "./renderer.js"
+import { scene } from './constants.js';
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
-export function createGalaxy()
-{
-
-const geo=new THREE.BufferGeometry()
-
-const verts=[]
-
-for(let i=0;i<10000;i++)
-{
-
-verts.push(
-(Math.random()-.5)*5000,
-(Math.random()-.5)*5000,
-(Math.random()-.5)*5000
-)
-
+const starGeo = new THREE.BufferGeometry();
+const starCount = 10000;
+const positions = [];
+for(let i=0;i<starCount;i++){
+  positions.push(Math.random()*2000-1000, Math.random()*2000-1000, Math.random()*2000-1000);
 }
-
-geo.setAttribute(
-"position",
-new THREE.Float32BufferAttribute(
-verts,3)
-)
-
-const mat =
-new THREE.PointsMaterial({
-color:0xffffff,
-size:1
-})
-
-const stars =
-new THREE.Points(geo,mat)
-
-scene.add(stars)
-
-
-}
+starGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff}));
+scene.add(stars);
