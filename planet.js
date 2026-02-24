@@ -1,46 +1,15 @@
-import * as THREE from "/lib/three.module.js"
-import {scene} from "./renderer.js"
-import {terrain} from "./terrain.js"
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+import { bodies, scene } from './constants.js';
+import { applyTerrain } from './terrain.js';
+import { addAtmosphere } from './atmo.js';
 
-export class Planet
-{
-
-constructor(data)
-{
-
-this.mass=data.mass
-
-this.radius=data.radius
-
-this.position=data.position
-
-this.velocity=data.velocity
-
-this.mesh =
-new THREE.Mesh(
-
-terrain(this.radius),
-
-new THREE.MeshStandardMaterial({
-color:data.color||0x3399ff
-})
-
-)
-
-scene.add(this.mesh)
-
-}
-
-update(dt)
-{
-
-this.position.add(
-this.velocity.clone().multiplyScalar(dt)
-)
-
-this.mesh.position.copy(this.position)
-
-}
-
-
+export function createPlanet(radius,mass,pos,vel,atm,terrainRough){
+  const geo=new THREE.SphereGeometry(radius,64,64);
+  applyTerrain(geo,terrainRough);
+  const mat=new THREE.MeshStandardMaterial({color:new THREE.Color(Math.random(),Math.random(),Math.random())});
+  const mesh=new THREE.Mesh(geo,mat);
+  mesh.position.copy(pos);
+  scene.add(mesh);
+  if(atm>0) addAtmosphere(mesh,radius);
+  bodies.push({mesh,mass,velocity:vel,type:'planet'});
 }
