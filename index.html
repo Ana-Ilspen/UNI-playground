@@ -1,36 +1,48 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
 <meta charset="UTF-8">
-<title>Planet Builder Ultra</title>
-
+<title>Universe Sandbox Pro Modular</title>
 <link rel="stylesheet" href="style.css">
-<link rel="icon" href="favicon.ico">
-
+<link rel="stylesheet" href="ui.css">
 </head>
-
 <body>
 
-<canvas id="canvas"></canvas>
-
 <div id="ui">
-
-<div id="builder"></div>
-
-<div id="hud"></div>
-
-<div id="infoBtn">ⓘ</div>
-
-<div id="infoPanel"></div>
-
+  <b>PLANET BUILDER</b><br>
+  Radius<input id="radius" value="8"><br>
+  Mass<input id="mass" value="20"><br>
+  Distance<input id="distance" value="200"><br>
+  OrbitSpeed<input id="speed" value="6"><br>
+  Atmos<input id="atm" value="1"><br>
+  Terrain<input id="terrain" value="1"><br>
+  <button onclick="builder.createPlanetUI()">Create Planet</button>
+  <button onclick="blackhole.createBlackHoleUI()">Create Black Hole</button>
+  <button onclick="hps.warp()">Hyperspace</button>
+  <button onclick="info.toggleInfo()">ⓘ</button>
+  <button onclick="builder.saveUniverse()">Save</button>
+  <button onclick="builder.loadUniverse()">Load</button>
 </div>
 
-  <script type="module" src="main.js"></script>
+<script type="module" src="js/constants.js"></script>
+<script type="module" src="js/renderer.js"></script>
+<script type="module" src="js/grid.js"></script>
+<script type="module" src="js/control.js"></script>
+<script type="module" src="js/gb.js"></script>
+<script type="module" src="js/grav.js"></script>
+<script type="module" src="js/atmo.js"></script>
+<script type="module" src="js/terrain.js"></script>
+<script type="module" src="js/planet.js"></script>
+<script type="module" src="js/blackhole.js"></script>
+<script type="module" src="js/builder.js"></script>
+<script type="module" src="js/coll.js"></script>
+<script type="module" src="js/hps.js"></script>
+<script type="module" src="js/hud.js"></script>
+<script type="module" src="js/info.js"></script>
+<script type="module" src="js/input.js"></script>
+<script type="module" src="js/sg.js"></script>
+<script type="module" src="js/spacecraft.js"></script>
+<script type="module" src="js/main.js"></script>
 
 </body>
-
 </html>
-
-
