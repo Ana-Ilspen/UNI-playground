@@ -1,16 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Universe Sandbox</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="ui.css">
+<meta charset="UTF-8">
+<title>Universe Builder v3</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="ui">
-    <h2>Universe Sandbox</h2>
-    <button onclick="window.location.href='builder.html'">Go to World Builder</button>
-  </div>
-  <script type="module" src="./js/main.js"></script>
+
+<div id="app">
+
+    <!-- LEFT PANEL -->
+    <div id="databasePanel" class="panel">
+
+        <div class="panelHeader">
+            <button id="collapseBtn">☰</button>
+            <span>Celestial Database</span>
+        </div>
+
+        <input id="searchBox" placeholder="Search objects...">
+
+        <div id="databaseList"></div>
+
+    </div>
+
+
+    <!-- INFO PLACARD -->
+    <div id="infoPlacard" class="placard hidden">
+        <h2 id="infoName"></h2>
+        <p id="infoDesc"></p>
+    </div>
+
+
+    <!-- CANVAS -->
+    <canvas id="universeCanvas"></canvas>
+
+</div>
+
+<script type="module" src="main.js"></script>
+
 </body>
 </html>
