@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>Universe Builder</title>
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/ui.css">
+
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+
+<div id="leftPanel">
+
+<div id="panelHeader">
+☰ Celestial Database
+</div>
+
+<input id="search" placeholder="Search 120+ objects...">
+
+<div id="objectList"></div>
+
+</div>
+
+<div id="rightPanel">
+
+<button onclick="saveUniverse()">Save</button>
+<button onclick="loadUniverse()">Load</button>
+<button onclick="toggleTerrain()">Terrain Sculpt</button>
+
+<div id="infoBox">
+Select object
+</div>
+
+</div>
+
+<script type="module">
+
+import "./js/main.js"
+import "./js/builder.js"
+import "./js/ui.js"
+
+</script>
+
+</body>
+</html>
