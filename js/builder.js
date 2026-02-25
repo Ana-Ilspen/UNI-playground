@@ -1,5 +1,5 @@
-import {scene,objects,camera} from "./main.js";
-import {CELESTIAL_DATABASE} from "./database.js";
+import {scene,objects,camera} from "./js/main.js";
+import {CELESTIAL_DATABASE} from "./js/database.js";
 
 let dragged=null;
 let ghost=null;
