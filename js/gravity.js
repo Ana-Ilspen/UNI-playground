@@ -1,4 +1,4 @@
-import {objects} from "./main.js";
+import {objects} from "./js/main.js";
 
 const G=6.674e-11;
 
