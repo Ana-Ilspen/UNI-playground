@@ -1,4 +1,4 @@
-import {objects,scene} from "./main.js";
+import {objects,scene} from "./js/main.js";
 
 export function saveUniverse(){
 
