@@ -10,7 +10,7 @@ const mouse=new THREE.Vector2();
 
 function createMesh(data){
 
-let geo=new THREE.SphereGeometry(data.radius,32,32);
+let geo=new THREE.SphereGeometry(data.radius,64,64);
 
 let mat=new THREE.MeshStandardMaterial({
 
