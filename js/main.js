@@ -17,7 +17,11 @@ import { RenderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postpro
 import { ShaderPass } from 'https://unpkg.com/three@0.160.0/examples/jsm/postprocessing/ShaderPass.js';
 
 
+import {initScene} from "./threeScene.js"
+import {initDatabaseUI} from "./databaseUI.js"
 
+initScene()
+initDatabaseUI()
 const lensPass = new ShaderPass(blackHoleShader);
 composer.addPass(lensPass);
 
@@ -78,5 +82,6 @@ window.addEventListener('resize',()=>{
   renderer.setSize(window.innerWidth,window.innerHeight);
   composer.setSize(window.innerWidth,window.innerHeight);
 });
+
 
 
