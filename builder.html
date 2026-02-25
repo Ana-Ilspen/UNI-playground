@@ -1,25 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>World Builder</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="ui.css">
+
+<meta charset="UTF-8">
+
+<title>Universe Builder V3</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="ui.css">
+
 </head>
+
 <body>
-  <!-- Top search / library -->
-  <div id="library">
-    <input id="search" placeholder="Search celestial bodies...">
-    <button id="addPlanet">Add Planet</button>
-    <button id="addStar">Add Star</button>
-    <button id="addBlackHole">Add Black Hole</button>
-    <button id="addAntimatter">Add Antimatter</button>
-  </div>
 
-  <!-- Bottom info placards -->
-  <div id="infoPanel"></div>
+<div id="library">
 
-  <!-- 3D canvas injected by builder.js -->
-  <script type="module" src="./js/builderc.js"></script>
+<input id="search" placeholder="Search celestial objects">
+
+<div id="assetList"></div>
+
+</div>
+
+
+<div id="inspector">
+
+<h2>Inspector</h2>
+
+<div id="infoText">
+Select an object
+</div>
+
+<label>
+Mass
+<input type="range" id="massSlider" min="1" max="1000000000">
+</label>
+
+<label>
+Radius
+<input type="range" id="radiusSlider" min="1" max="200">
+</label>
+
+<button id="sculptBtn">
+Enter Sculpt Mode
+</button>
+
+<button id="saveBtn">
+Save Galaxy
+</button>
+
+<button id="loadBtn">
+Load Galaxy
+</button>
+
+<button id="hyperspaceBtn">
+Hyperspace Jump
+</button>
+
+</div>
+
+
+<div id="bottomPanel"></div>
+
+
+<script type="module" src="./js/builderc.js"></script>
+
 </body>
 </html>
