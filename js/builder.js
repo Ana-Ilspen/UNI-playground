@@ -1,5 +1,6 @@
 import {scene,objects,camera} from "./js/main.js";
 import {CELESTIAL_DATABASE} from "./js/database.js";
+import {showOrbit} from "./orbitPredict.js";
 
 let dragged=null;
 let ghost=null;
@@ -70,7 +71,14 @@ window.addEventListener("mouseup",()=>{
 
 if(!ghost)return;
 
-let mesh=createMesh(dragged);
+let mesh=createMesh(dragged
+                   mesh.velocity=new THREE.Vector3(
+Math.random()*2,
+0,
+Math.random()*2
+);
+
+showOrbit(mesh););
 
 mesh.position.copy(ghost.position);
 
