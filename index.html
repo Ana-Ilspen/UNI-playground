@@ -1,15 +1,64 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Universe Playground</title>
-  <meta http-equiv="refresh" content="0; url=/builder.html" />
-  <script>
-    window.location.replace('/builder.html');
-  </script>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/ui.css" />
 </head>
 <body>
-  <p>Redirecting to <a href="/builder.html">Universe Playground</a>…</p>
+  <canvas id="scene" aria-label="3D universe scene"></canvas>
+
+  <header id="topBar">
+    <div class="brandWrap">
+      <h1 id="appTitle">Universe Playground</h1>
+      <p id="appSubtitle">Sandbox + Planet Creator</p>
+    </div>
+    <div class="topBarActions">
+      <button id="openSandbox" class="modeButton active">Sandbox</button>
+      <button id="openCreator" class="modeButton">Planet Creator</button>
+      <button id="saveBtn" title="Save current simulation">Save</button>
+      <button id="loadBtn" title="Load previous simulation">Load</button>
+    </div>
+  </header>
+
+  <aside id="leftPanel">
+    <div id="panelHeader">☰ Celestial Objects <span id="objectCount" class="pill">0</span></div>
+    <label class="fieldLabel" for="search">Search objects</label>
+    <input id="search" placeholder="e.g. Black Hole, Moon" />
+    <div id="quickFilters" class="buttonRow compact" aria-label="Object type filters"></div>
+    <div id="objectList"></div>
+    <p class="hint">Tip: click and hold an object, drag into the scene, then release to place it.</p>
+  </aside>
+
+  <aside id="rightPanel">
+    <section id="sandboxInfo" class="panelSection">
+      <h3>Sandbox Controls</h3>
+      <p class="sectionDescription">Try interactions and inspect object properties in real time.</p>
+      <div class="buttonRow">
+        <button id="toggleFluid">Enable Fluid</button>
+        <button id="spawnLight">Spawn Light Ray</button>
+      </div>
+      <div id="infoBox">Select an object to inspect.</div>
+    </section>
+
+    <section id="creatorPanel" class="panelSection hidden">
+      <h3>Planet Creator</h3>
+      <p class="sectionDescription">Provide physical values to create a custom world.</p>
+      <label>Name <input id="planetName" value="Custom Planet" /></label>
+      <label>Mass (kg) <input id="planetMass" type="number" value="5.972e24" /></label>
+      <label>Radius (m) <input id="planetRadius" type="number" value="6371000" /></label>
+      <label>Distance from Sun (m) <input id="planetDistance" type="number" value="1.496e11" /></label>
+      <label>Surface Gravity (m/s²) <input id="planetGravity" type="number" value="9.81" /></label>
+      <div class="buttonRow">
+        <button id="createPlanet">Create Planet</button>
+        <button id="toggleTerrain">Enable Terrain Sculpt</button>
+      </div>
+      <p class="hint">Sculpt mode: click + drag to raise terrain, hold Shift while dragging to lower terrain.</p>
+    </section>
+  </aside>
+
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

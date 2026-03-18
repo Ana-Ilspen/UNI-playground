@@ -1,15 +1,11 @@
 [build]
   publish = "."
 
+# Keep headers only; use index.html as the actual app entrypoint.
 [[redirects]]
-  from = "/"
-  to = "/builder.html"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/builder.html"
-  status = 200
+  from = "/builder.html"
+  to = "/"
+  status = 301
 
 [[headers]]
   for = "/*"
