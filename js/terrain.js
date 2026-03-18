@@ -1,116 +1,60 @@
-import {scene,camera,renderer,objects} from "./main.js";
+import * as THREE from "../lib/three.module.js";
 
-let sculptMode=false;
-let selected=null;
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const BRUSH_RADIUS = 0.22;
+const BRUSH_STRENGTH = 0.04;
 
-const raycaster=new THREE.Raycaster();
-const mouse=new THREE.Vector2();
+let enabled = false;
+let active = false;
 
-const BRUSH_RADIUS=5000;
-const BRUSH_STRENGTH=800;
-
-export function toggleTerrain(){
-
-sculptMode=!sculptMode;
-
-alert(
-sculptMode?
-"SCULPT MODE ON\nClick planet to sculpt":
-"SCULPT MODE OFF"
-);
-
+export function setTerrainMode(flag) {
+  enabled = flag;
 }
 
-window.toggleTerrain=toggleTerrain;
+export function bindTerrainEditing({ renderer, camera, objects }) {
+  const dom = renderer.domElement;
 
+  dom.addEventListener("pointerdown", () => {
+    if (enabled) active = true;
+  });
 
-window.addEventListener("mousedown",(e)=>{
+  window.addEventListener("pointerup", () => {
+    active = false;
+  });
 
-if(!sculptMode)return;
+  dom.addEventListener("pointermove", (event) => {
+    if (!enabled || !active) return;
 
-mouse.x=(e.clientX/window.innerWidth)*2-1;
-mouse.y=-(e.clientY/window.innerHeight)*2+1;
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-raycaster.setFromCamera(mouse,camera);
+    raycaster.setFromCamera(mouse, camera);
+    const hits = raycaster.intersectObjects(objects);
+    if (!hits.length) return;
 
-const intersects=
-raycaster.intersectObjects(objects);
-
-if(intersects.length===0)return;
-
-selected=intersects[0].object;
-
-sculpt(selected,intersects[0].point,e);
-
-});
-
-
-function sculpt(mesh,point,event){
-
-if(!mesh.geometry.attributes.position)return;
-
-const positions=
-mesh.geometry.attributes.position;
-
-for(let i=0;i<positions.count;i++){
-
-const vx=positions.getX(i);
-const vy=positions.getY(i);
-const vz=positions.getZ(i);
-
-const vertex=
-new THREE.Vector3(vx,vy,vz)
-.applyMatrix4(mesh.matrixWorld);
-
-const dist=
-vertex.distanceTo(point);
-
-if(dist<BRUSH_RADIUS){
-
-let influence=
-(1-dist/BRUSH_RADIUS);
-
-let normal=
-vertex.clone()
-.sub(mesh.position)
-.normalize();
-
-if(event.shiftKey){
-
-// lower terrain
-normal.multiplyScalar(
--BRUSH_STRENGTH*influence
-);
-
-}else if(event.altKey){
-
-// smooth
-normal.multiplyScalar(
-0
-);
-
-}else{
-
-// raise terrain
-normal.multiplyScalar(
-BRUSH_STRENGTH*influence
-);
-
+    const hit = hits[0];
+    sculpt(hit.object, hit.point, event.shiftKey ? -1 : 1);
+  });
 }
 
-positions.setXYZ(
-i,
-vx+normal.x,
-vy+normal.y,
-vz+normal.z
-);
+function sculpt(mesh, worldPoint, direction) {
+  const pos = mesh.geometry.attributes.position;
+  if (!pos) return;
 
-}
+  const localPoint = mesh.worldToLocal(worldPoint.clone());
 
-}
+  for (let i = 0; i < pos.count; i++) {
+    const v = new THREE.Vector3(pos.getX(i), pos.getY(i), pos.getZ(i));
+    const dist = v.distanceTo(localPoint);
+    if (dist > BRUSH_RADIUS) continue;
 
-positions.needsUpdate=true;
+    const influence = 1 - dist / BRUSH_RADIUS;
+    const normal = v.clone().normalize().multiplyScalar(BRUSH_STRENGTH * influence * direction);
+    v.add(normal);
+    pos.setXYZ(i, v.x, v.y, v.z);
+  }
 
-mesh.geometry.computeVertexNormals();
-
+  pos.needsUpdate = true;
+  mesh.geometry.computeVertexNormals();
 }
