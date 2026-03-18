@@ -1,59 +1,55 @@
-import {scene,objects} from "./main.js";
+import * as THREE from "../lib/three.module.js";
+import { G } from "./constants.js";
 
-const G=6.674e-11;
+export function showOrbit(scene, object, objects, { dt = 1200, steps = 250, physicalToScene }) {
+  if (!object?.userData?.mass || !object.userData.state) return;
 
-export function showOrbit(object){
+  if (object.userData.orbitLine) scene.remove(object.userData.orbitLine);
 
-if(object.orbitLine)
-scene.remove(object.orbitLine);
+  const simulated = objects.map((o) => ({
+    mass: o.userData.mass,
+    fixed: o.userData.fixed,
+    positionM: o.userData.state.positionM.clone(),
+    velocityMps: o.userData.state.velocityMps.clone(),
+    source: o
+  }));
 
-const points=[];
+  const target = simulated.find((s) => s.source === object);
+  if (!target) return;
 
-let pos=object.position.clone();
-let vel=object.velocity?
-object.velocity.clone():
-new THREE.Vector3();
+  const points = [];
 
-for(let i=0;i<300;i++){
+  for (let step = 0; step < steps; step++) {
+    const accel = simulated.map(() => new THREE.Vector3());
 
-for(let other of objects){
+    for (let i = 0; i < simulated.length; i++) {
+      for (let j = i + 1; j < simulated.length; j++) {
+        const a = simulated[i];
+        const b = simulated[j];
+        const dir = new THREE.Vector3().subVectors(b.positionM, a.positionM);
+        const distSq = Math.max(dir.lengthSq(), 1e6);
+        const dist = Math.sqrt(distSq);
+        const unit = dir.divideScalar(dist);
 
-if(object===other)continue;
+        if (!a.fixed) accel[i].addScaledVector(unit, (G * b.mass) / distSq);
+        if (!b.fixed) accel[j].addScaledVector(unit, -(G * a.mass) / distSq);
+      }
+    }
 
-let dir=
-other.position.clone().sub(pos);
+    for (let i = 0; i < simulated.length; i++) {
+      if (simulated[i].fixed) continue;
+      simulated[i].velocityMps.addScaledVector(accel[i], dt);
+      simulated[i].positionM.addScaledVector(simulated[i].velocityMps, dt);
+    }
 
-let dist=dir.length()+1;
+    points.push(physicalToScene(target.positionM));
+  }
 
-let force=
-G*other.userData.mass/
-(dist*dist);
+  const line = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(points),
+    new THREE.LineBasicMaterial({ color: 0x5fd7ff })
+  );
 
-dir.normalize()
-.multiplyScalar(force);
-
-vel.add(dir);
-
-}
-
-pos.add(vel);
-
-points.push(pos.clone());
-
-}
-
-const geo=
-new THREE.BufferGeometry()
-.setFromPoints(points);
-
-const mat=
-new THREE.LineBasicMaterial({
-color:0x00ffff
-});
-
-object.orbitLine=
-new THREE.Line(geo,mat);
-
-scene.add(object.orbitLine);
-
+  object.userData.orbitLine = line;
+  scene.add(line);
 }

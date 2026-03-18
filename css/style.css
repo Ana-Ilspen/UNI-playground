@@ -1,13 +1,78 @@
-body{
-margin:0;
-background:black;
-color:white;
-font-family:Arial;
-overflow:hidden;
+:root {
+  color-scheme: dark;
 }
 
-canvas{
-position:absolute;
-top:0;
-left:0;
+body {
+  margin: 0;
+  background: radial-gradient(circle at 50% 20%, #101a2a, #020305 65%);
+  color: #eef3ff;
+  font-family: Inter, Arial, sans-serif;
+  overflow: hidden;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+}
+
+#topBar {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(1100px, calc(100% - 16px));
+  background: rgba(9, 15, 27, 0.75);
+  border: 1px solid #2d3a56;
+  border-radius: 10px;
+  padding: 8px 12px;
+  z-index: 20;
+}
+
+#appTitle {
+  margin: 0;
+  font-size: 16px;
+}
+
+#appSubtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #b7c5df;
+}
+
+.topBarActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+button,
+input {
+  background: #0f1724;
+  color: #e8ecff;
+  border: 1px solid #2e3f5c;
+  border-radius: 6px;
+}
+
+button {
+  cursor: pointer;
+  padding: 8px 10px;
+  transition: 0.16s ease;
+}
+
+button:hover {
+  border-color: #44628e;
+  transform: translateY(-1px);
+}
+
+.modeButton.active {
+  background: #1f3e74;
+}
+
+.hidden {
+  display: none;
 }

@@ -1,23 +1,61 @@
-import {objects} from "./js/main.js";
+import * as THREE from "../lib/three.module.js";
+import { G } from "./constants.js";
 
-const G=6.674e-11;
+function computeAccelerations(objects) {
+  const accelerations = objects.map(() => new THREE.Vector3());
 
-export function updateGravity(){
+  for (let i = 0; i < objects.length; i++) {
+    for (let j = i + 1; j < objects.length; j++) {
+      const a = objects[i];
+      const b = objects[j];
 
-for(let a of objects){
+      const pa = a.userData.state.positionM;
+      const pb = b.userData.state.positionM;
+      const dir = new THREE.Vector3().subVectors(pb, pa);
+      const distSq = Math.max(dir.lengthSq(), 1e6);
+      const dist = Math.sqrt(distSq);
+      const unit = dir.divideScalar(dist);
 
-for(let b of objects){
+      const accelOnA = (G * b.userData.mass) / distSq;
+      const accelOnB = (G * a.userData.mass) / distSq;
 
-if(a===b)continue;
+      if (!a.userData.fixed) accelerations[i].addScaledVector(unit, accelOnA);
+      if (!b.userData.fixed) accelerations[j].addScaledVector(unit, -accelOnB);
+    }
+  }
 
-let dx=b.position.x-a.position.x;
-let dy=b.position.y-a.position.y;
-let dz=b.position.z-a.position.z;
-
-let dist=Math.sqrt(dx*dx+dy*dy+dz*dz)+1;
-
-let force=G*a.userData.mass*b.userData.mass/(dist*dist);
-
+  return accelerations;
 }
-}
+
+// velocity Verlet integration in SI units
+export function updateGravity(objects, dtSeconds) {
+  for (const body of objects) {
+    if (!body.userData.state) {
+      body.userData.state = {
+        positionM: new THREE.Vector3(),
+        velocityMps: new THREE.Vector3()
+      };
+    }
+  }
+
+  const accel0 = computeAccelerations(objects);
+
+  for (let i = 0; i < objects.length; i++) {
+    const body = objects[i];
+    if (body.userData.fixed) continue;
+
+    const state = body.userData.state;
+    state.positionM.addScaledVector(state.velocityMps, dtSeconds);
+    state.positionM.addScaledVector(accel0[i], 0.5 * dtSeconds * dtSeconds);
+  }
+
+  const accel1 = computeAccelerations(objects);
+
+  for (let i = 0; i < objects.length; i++) {
+    const body = objects[i];
+    if (body.userData.fixed) continue;
+
+    const state = body.userData.state;
+    state.velocityMps.addScaledVector(accel0[i].add(accel1[i]), 0.5 * dtSeconds);
+  }
 }
