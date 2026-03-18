@@ -1,117 +1,105 @@
-import {scene,objects,camera} from "./js/main.js";
-import {CELESTIAL_DATABASE} from "./js/database.js";
-import {showOrbit} from "./orbitPredict.js";
+import * as THREE from "../lib/three.module.js";
+import { CELESTIAL_DATABASE } from "./database.js";
+import { RADIUS_SCALE } from "./constants.js";
 
-let dragged=null;
-let ghost=null;
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
 
-const raycaster=new THREE.Raycaster();
-const mouse=new THREE.Vector2();
+export function initBuilder({ scene, camera, renderer, createBody, onSelect, setDroppedPosition }) {
+  const objectList = document.getElementById("objectList");
+  const objectCount = document.getElementById("objectCount");
+  const filtersWrap = document.getElementById("quickFilters");
+  const search = document.getElementById("search");
 
-function createMesh(data){
+  let dragPreset = null;
+  let ghost = null;
+  let activeFilter = "all";
 
-let geo=new THREE.SphereGeometry(data.radius,64,64);
+  const availableTypes = ["all", ...new Set(CELESTIAL_DATABASE.map((obj) => obj.type))];
+  const filterButtons = availableTypes.map((type) => {
+    const button = document.createElement("button");
+    button.className = `small ${type === "all" ? "active" : ""}`;
+    button.dataset.filter = type;
+    button.textContent = prettifyType(type);
+    button.addEventListener("click", () => {
+      activeFilter = type;
+      filterButtons.forEach((btn) => btn.classList.toggle("active", btn === button));
+      renderList(search.value);
+    });
+    filtersWrap.appendChild(button);
+    return button;
+  });
 
-let mat=new THREE.MeshStandardMaterial({
+  function renderList(filterText = "") {
+    objectList.innerHTML = "";
+    const query = filterText.trim().toLowerCase();
 
-color:data.color
+    const filtered = CELESTIAL_DATABASE
+      .filter((item) => activeFilter === "all" || item.type === activeFilter)
+      .filter((item) => item.name.toLowerCase().includes(query));
 
-});
+    objectCount.textContent = String(filtered.length);
 
-let mesh=new THREE.Mesh(geo,mat);
+    filtered.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "objectItem";
+      div.innerHTML = `
+        <div class="objectTitle">${item.name}</div>
+        <div class="objectMeta">
+          <span class="objectType">${prettifyType(item.type)}</span>
+          <span>Mass ${item.mass.toExponential(2)} kg</span>
+        </div>
+      `;
 
-mesh.userData=data;
+      div.addEventListener("pointerdown", () => {
+        dragPreset = item;
+        ghost = createGhost(item);
+        scene.add(ghost);
+      });
 
-scene.add(mesh);
+      objectList.appendChild(div);
+    });
+  }
 
-objects.push(mesh);
+  search.addEventListener("input", () => renderList(search.value));
+  renderList();
 
-return mesh;
+  renderer.domElement.addEventListener("pointermove", (event) => {
+    if (!ghost) return;
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const point = new THREE.Vector3();
+    raycaster.ray.intersectPlane(plane, point);
+    ghost.position.copy(point);
+  });
 
+  window.addEventListener("pointerup", () => {
+    if (!ghost || !dragPreset) return;
+    const mesh = createBody(dragPreset);
+    setDroppedPosition(mesh, ghost.position.clone());
+    onSelect(mesh);
+    scene.remove(ghost);
+    ghost = null;
+    dragPreset = null;
+  });
 }
 
-function createGhost(data){
-
-let geo=new THREE.SphereGeometry(data.radius,16,16);
-
-let mat=new THREE.MeshBasicMaterial({
-
-color:data.color,
-transparent:true,
-opacity:0.5
-
-});
-
-ghost=new THREE.Mesh(geo,mat);
-
-scene.add(ghost);
-
+function createGhost(data) {
+  const geo = new THREE.SphereGeometry(scaleRadius(data.radius), 24, 24);
+  const mat = new THREE.MeshBasicMaterial({ color: data.color, transparent: true, opacity: 0.45 });
+  return new THREE.Mesh(geo, mat);
 }
 
-window.addEventListener("mousemove",(e)=>{
-
-if(!ghost)return;
-
-mouse.x=(e.clientX/window.innerWidth)*2-1;
-mouse.y=-(e.clientY/window.innerHeight)*2+1;
-
-raycaster.setFromCamera(mouse,camera);
-
-let plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
-
-let pos=new THREE.Vector3();
-
-raycaster.ray.intersectPlane(plane,pos);
-
-ghost.position.copy(pos);
-
-});
-
-window.addEventListener("mouseup",()=>{
-
-if(!ghost)return;
-
-let mesh=createMesh(dragged
-                   mesh.velocity=new THREE.Vector3(
-Math.random()*2,
-0,
-Math.random()*2
-);
-
-showOrbit(mesh););
-
-mesh.position.copy(ghost.position);
-
-scene.remove(ghost);
-
-ghost=null;
-
-});
-
-export function populateList(){
-
-let list=document.getElementById("objectList");
-
-CELESTIAL_DATABASE.forEach(obj=>{
-
-let div=document.createElement("div");
-
-div.className="objectItem";
-
-div.innerText=obj.name;
-
-div.onmousedown=()=>{
-
-dragged=obj;
-
-createGhost(obj);
-
-};
-
-list.appendChild(div);
-
-});
-
+function prettifyType(type) {
+  if (type === "all") return "All";
+  return type
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
-populateList();
+export function scaleRadius(radiusMeters) {
+  return Math.max(0.2, radiusMeters / RADIUS_SCALE);
+}
