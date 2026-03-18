@@ -8,12 +8,27 @@ const mouse = new THREE.Vector2();
 export function initBuilder({ scene, camera, renderer, createBody, onSelect, setDroppedPosition }) {
   const objectList = document.getElementById("objectList");
   const objectCount = document.getElementById("objectCount");
-  const filterButtons = Array.from(document.querySelectorAll("#quickFilters button"));
+  const filtersWrap = document.getElementById("quickFilters");
   const search = document.getElementById("search");
 
   let dragPreset = null;
   let ghost = null;
   let activeFilter = "all";
+
+  const availableTypes = ["all", ...new Set(CELESTIAL_DATABASE.map((obj) => obj.type))];
+  const filterButtons = availableTypes.map((type) => {
+    const button = document.createElement("button");
+    button.className = `small ${type === "all" ? "active" : ""}`;
+    button.dataset.filter = type;
+    button.textContent = prettifyType(type);
+    button.addEventListener("click", () => {
+      activeFilter = type;
+      filterButtons.forEach((btn) => btn.classList.toggle("active", btn === button));
+      renderList(search.value);
+    });
+    filtersWrap.appendChild(button);
+    return button;
+  });
 
   function renderList(filterText = "") {
     objectList.innerHTML = "";
@@ -31,7 +46,7 @@ export function initBuilder({ scene, camera, renderer, createBody, onSelect, set
       div.innerHTML = `
         <div class="objectTitle">${item.name}</div>
         <div class="objectMeta">
-          <span class="objectType">${item.type}</span>
+          <span class="objectType">${prettifyType(item.type)}</span>
           <span>Mass ${item.mass.toExponential(2)} kg</span>
         </div>
       `;
@@ -47,15 +62,6 @@ export function initBuilder({ scene, camera, renderer, createBody, onSelect, set
   }
 
   search.addEventListener("input", () => renderList(search.value));
-
-  filterButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      activeFilter = button.dataset.filter || "all";
-      filterButtons.forEach((btn) => btn.classList.toggle("active", btn === button));
-      renderList(search.value);
-    });
-  });
-
   renderList();
 
   renderer.domElement.addEventListener("pointermove", (event) => {
@@ -84,6 +90,14 @@ function createGhost(data) {
   const geo = new THREE.SphereGeometry(scaleRadius(data.radius), 24, 24);
   const mat = new THREE.MeshBasicMaterial({ color: data.color, transparent: true, opacity: 0.45 });
   return new THREE.Mesh(geo, mat);
+}
+
+function prettifyType(type) {
+  if (type === "all") return "All";
+  return type
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
 export function scaleRadius(radiusMeters) {

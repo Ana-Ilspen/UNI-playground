@@ -129,7 +129,7 @@ function createBody(data) {
     state: { positionM: new THREE.Vector3(), velocityMps: new THREE.Vector3() }
   };
 
-  if (mesh.userData.type === "planet") addAtmosphere(mesh);
+  if (["planet", "exoplanet", "dwarf-planet"].includes(mesh.userData.type)) addAtmosphere(mesh);
 
   objects.push(mesh);
   scene.add(mesh);
